@@ -1,5 +1,25 @@
-<div id="browser" class="border-left float-right p-1 position-relative fixed-top">
-  <div class="p-3">
-    <input class="form-control" type="text" placeholder="http://localhost:8080">
+<div id="browser" class="border-left float-right position-relative fixed-top">
+  <div id="url-bar" class="p-2 border-bottom">
+    <div class=" row">
+      <label class="col-sm-2 col-form-label">&nbsp;
+        <i class="fa fa-arrow-left"></i>&nbsp;
+	<i class="fa fa-arrow-right" (click)="openUrl()"></i>&nbsp;
+        <i class="fa fa-repeat" (click)="reload()"></i>
+      </label>
+      <div class="col-sm-10">
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-unlock-alt" aria-hidden="true"></i></div>
+          </div>
+          <input id="url" type="text" [(ngModel)]="url" class="form-control simplebox" placeholder="Type a URL">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
+  <div id="frame">
+    <iframe id="browser-output" [src]="endPoint | safe" frameborder="0"></iframe>
   </div>
 </div>
