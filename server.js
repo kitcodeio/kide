@@ -6,18 +6,15 @@ const fs = require('fs');
 
 const server = new Hapi.Server();
 
-const path = "."
+const path = "../demo"
 
-/*var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
-
-var ptyProcess = pty.spawn(shell, [], {
+var shell = pty.spawn((os.platform() === 'win32' ? 'powershell.exe' : 'bash'), [], {
   name: 'xterm-color',
-  cols: 80,
-  rows: 30,
-  cwd: process.env.HOME,
+  cols: 157,
+  rows: 17,
+  cwd: __dirname+'/../demo',
   env: process.env
 });
-*/
 
 server.connection({
   host: "localhost",
@@ -96,6 +93,13 @@ async function start() {
       });
     });
 
+    socket.on('xterm:key', key => {
+      shell.write(key);
+    });
+
+    shell.on('data', data => {
+      socket.emit('xterm:data', data);
+    });
 
   });
   await server.register([Inert]);

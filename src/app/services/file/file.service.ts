@@ -1,22 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import * as io from 'socket.io-client';
+
+import { SocketService } from '../socket/socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileService {
 
-  socket: any;
-
-  constructor() {
-    this.socket = io('http://localhost:8080');
-  }
+  constructor(private socket: SocketService) { }
 
   init(): Promise<any> {	  
     this.socket.emit('init');
     return new Promise((resolve, reject) => {
-      this.socket.on('dir:list', data => {
+      this.socket.on('dir:list').subscribe(data => {
         return resolve(data);
       });
     });
@@ -25,7 +21,7 @@ export class FileService {
   readFile(path: any): Promise<any> {
     this.socket.emit('read:file', path);
     return new Promise((resolve, reject) => {
-      this.socket.on('file', data => {
+      this.socket.on('file').subscribe(data => {
         return resolve(data);
       });
     });
@@ -34,8 +30,8 @@ export class FileService {
   readDir(path: any): Promise<any> {	  
     this.socket.emit('read:dir', path);
     return new Promise((resolve, reject) => {
-      this.socket.on('dir:list', data => {
-	return resolve(data);	    
+      this.socket.on('dir:list').subscribe(data => {
+        return resolve(data);	    
       });
     });
   }
@@ -43,7 +39,7 @@ export class FileService {
   saveFile(file: any): Promise<any> {
     this.socket.emit('save:file', file);
     return new Promise((resolve, reject) => {
-      this.socket.on('file:saved', response => {
+      this.socket.on('file:saved').subscribe(response => {
         return (response.status == "error")?reject(response.error):resolve(response.message);
       });
     });

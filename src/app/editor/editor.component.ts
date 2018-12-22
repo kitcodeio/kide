@@ -44,17 +44,20 @@ export class EditorComponent implements OnInit {
   constructor(private fs: FileService, private toastr: ToastrService) { }
 
   setDimentions(h, w): void {
-    //$("#editor").css("height", h);
+    $("#editor").css("height", h);
+    $("monaco-editor").css("height", h, 'important');
+    $(".root").css("height");
     $("#editor").css("width", w);
   }
 
   ngOnInit() {
     let self = this;
+  
     this.setDimentions($(document).height()*2/3, $(document).width()*3/4);
     $(window).on('resize', function(){
       self.setDimentions($(document).height()*2/3, $(document).width()*3/4);	  
     });
-	  
+
     this.fileChange
       .pipe(debounceTime(1000), distinctUntilChanged((a, b) => a.content === b.content))
       .subscribe(file => this.autoSave(file)); 
@@ -63,15 +66,12 @@ export class EditorComponent implements OnInit {
       if (event.keyCode == 83 && event.ctrlKey) {
         event.preventDefault();
 	self.toastr.success('file saved', 'Success', { positionClass:'toast-bottom-right' });
-        console.log('saved');
       }
     }); 
   }
 
   autoSave(file: any): void {
-    this.fs.saveFile(file).then(res => {
-      console.log(res);
-    }).catch(err => {
+    this.fs.saveFile(file).then(res => {}).catch(err => {
       console.log(err);
     });
   }
