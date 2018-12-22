@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as $ from 'jquery';
+
+declare var $:any;
 
 @Component({
   selector: 'app-terminal',
@@ -17,9 +18,9 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.setDimentions($(document).height(), $(document).width()*2/3);
+	  this.setDimentions($(document).height(), $(document).width()*3/4);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height(), $(document).width()*2/3);	  
+	    self.setDimentions($(document).height(), $(document).width()*3/4);	  
     });
   }
 

@@ -1,0 +1,11 @@
+<div class="ul" [ngClass]="isRoot?'root':null">
+  <div *ngFor="let el of dir; let i = index;">
+    <div class="li" (click)="getFileOrDir(el, i)">
+      <i *ngIf="el.type == 'dir'" [ngClass]="(el.state == 'open')?'open':null" class="fa fa-caret-right" aria-hidden="true"></i>
+      {{el.name || 'undefined' }}
+    </div>
+    <div class="child-ul">
+      <app-tree *ngIf="el.type == 'dir'" [dir]="el.dir" [open]="open.bind(this)"></app-tree>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,13 @@
 <div id="editor" class="float-left">
   <section class="content" id="content">
-    <ul>
-      <li *ngFor="let file of files" (click)="open(file)">
-        {{ file.uri || 'undefined' }}
-      </li>
-    </ul>
-    <monaco-editor #editor 
+  <app-tree
+    [dir]="dir"
+    [open]="open.bind(this)"
+    [isRoot]="true"
+  ></app-tree>
+  <monaco-editor #editor 
       [theme]="theme"
-      [options]="{quickSuggestions: true}"
+      [options]="options"
       [file]="file"
       (ready)="onReady($event)"
       (fileChange)="fileChange.next($event)"

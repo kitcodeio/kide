@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~7.1.0",
+    "@angular/animations": "^7.1.4",
     "@angular/common": "~7.1.0",
     "@angular/compiler": "~7.1.0",
     "@angular/core": "~7.1.0",
@@ -27,8 +27,12 @@
     "jquery": "^3.3.1",
     "monaco-editor": "^0.15.6",
     "ngx-monaco": "^0.8.0",
+    "ngx-toastr": "^9.1.1",
+    "node-pty": "^0.7.8",
     "popper.js": "^1.14.6",
     "rxjs": "~6.3.3",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },

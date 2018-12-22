@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MonacoFile, MonacoEditorDirective } from 'ngx-monaco';
+import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import * as $ from 'jquery';
+
+import { FileService } from '../services/file/file.service';
+
+declare var $:any;
 
 @Component({
   selector: 'app-editor',
@@ -12,16 +16,16 @@ import * as $ from 'jquery';
 export class EditorComponent implements OnInit {
 
   theme = 'vs-dark';
-	
-  files: MonacoFile[] = [{
-    uri : 'index.js',
-    content: "'use strict';\nconsole.log('Hello World');"
-  }, {
-    uri : 'package.json',
-    content: '{\n  "name": "hello-world",\n  "version": "0.0.0"\n}'
-  }];
 
-  file = this.files[0];
+  options = {
+    quickSuggestions: true,
+    experimentalDecorators: false
+  };
+
+  dir: any[] = [];
+
+  file;
+  newFile;
 
   fileChange = new Subject<MonacoFile>();
 
@@ -32,11 +36,12 @@ export class EditorComponent implements OnInit {
   }
 
   onReady(editor: monaco.editor.IEditor) {
-    //console.log(editor);
-    // Bootstrap(editor);
+    this.fs.init().then(data => {
+      this.dir = data;
+    });
   }
 
-  constructor() { }
+  constructor(private fs: FileService, private toastr: ToastrService) { }
 
   setDimentions(h, w): void {
     //$("#editor").css("height", h);
@@ -45,22 +50,30 @@ export class EditorComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.setDimentions($(document).height()*2/3, $(document).width()*2/3);
-	  
+    this.setDimentions($(document).height()*2/3, $(document).width()*3/4);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height()*2/3, $(document).width()*2/3);	  
+      self.setDimentions($(document).height()*2/3, $(document).width()*3/4);	  
     });
 	  
     this.fileChange
       .pipe(debounceTime(1000), distinctUntilChanged((a, b) => a.content === b.content))
-      .subscribe(file =>console.log(file)); 
-	  
+      .subscribe(file => this.autoSave(file)); 
+
     $(document).on('keydown', function(event) {
       if (event.keyCode == 83 && event.ctrlKey) {
         event.preventDefault();
-	//=========do something to save document=========//
+	self.toastr.success('file saved', 'Success', { positionClass:'toast-bottom-right' });
+        console.log('saved');
       }
     }); 
+  }
+
+  autoSave(file: any): void {
+    this.fs.saveFile(file).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
 }

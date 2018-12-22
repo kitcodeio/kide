@@ -1,0 +1,47 @@
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+} 
+  
+.root{
+  height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 250px;
+  background-color: #252526;
+  border-left: 1px solid gray;
+  .li {
+    line-height: 1.5em;
+    color: #c7c7c7;
+    cursor: pointer;
+    padding: 0 5px;
+    font-family: "Droid Sans Mono", monospace, monospace, "Droid Sans Fallback";
+    font-size: 14px;
+    &:hover {
+      background-color: lighten(black, 20%);
+    }
+  }
+  .open {
+    transform: rotate(45deg);
+  }
+  .child-ul {
+    padding-left: 10px;
+  }
+}

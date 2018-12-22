@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
-import * as $ from 'jquery';
+
+declare var $:any;
 
 @Component({
   selector: 'app-browser',
@@ -58,18 +59,18 @@ export class BrowserComponent implements OnInit {
       else {
         this.initProgressBar();
         this.endPoint = this.url;
-        this.setFrameDimentions($(document).height(), $(document).width()/3);
+        this.setFrameDimentions($(document).height(), $(document).width()/4);
       }
     }
   }
 
   ngOnInit() {
     let self = this;
-    this.setDimentions($(document).height(), $(document).width()/3);	  
-    this.setFrameDimentions($(document).height(), $(document).width()/3);
+    this.setDimentions($(document).height(), $(document).width()/4);	  
+    this.setFrameDimentions($(document).height(), $(document).width()/4);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height(), $(document).width()/3);	  
-      self.setFrameDimentions($(document).height(), $(document).width()/3);
+      self.setDimentions($(document).height(), $(document).width()/4);	  
+      self.setFrameDimentions($(document).height(), $(document).width()/4);
     });
     $('#browser-output').on('load', function(event){
       clearInterval(self.interval);

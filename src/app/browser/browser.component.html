@@ -1,9 +1,7 @@
 <div id="browser" class="border-left float-right position-relative fixed-top">
   <div id="url-bar" class="p-2 border-bottom">
     <div class=" row">
-      <label class="col-sm-2 col-form-label">&nbsp;
-        <i class="fa fa-arrow-left"></i>&nbsp;
-	<i class="fa fa-arrow-right" (click)="openUrl()"></i>&nbsp;
+      <label class="col-sm-2 col-form-label" style="text-align: center;">&nbsp;
         <i class="fa fa-repeat" (click)="reload()"></i>
       </label>
       <div class="col-sm-10">
@@ -12,7 +10,10 @@
             <div class="input-group-text"><i class="fa fa-unlock-alt" aria-hidden="true"></i></div>
           </div>
           <input id="url" type="text" [(ngModel)]="url" class="form-control simplebox" placeholder="Type a URL">
-        </div>
+          <div class="input-group-append">
+            <div class="input-group-text"><i class="fa fa-arrow-right" aria-hidden="true" (click)="openUrl()"></i></div>
+          </div>
+	</div>
       </div>
     </div>
   </div>
