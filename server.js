@@ -8,13 +8,7 @@ const server = new Hapi.Server();
 
 const path = "../demo"
 
-var shell = pty.spawn((os.platform() === 'win32' ? 'powershell.exe' : 'bash'), [], {
-  name: 'xterm-color',
-  cols: 157,
-  rows: 17,
-  cwd: __dirname+'/../demo',
-  env: process.env
-});
+var shell;
 
 server.connection({
   host: "localhost",
@@ -93,12 +87,31 @@ async function start() {
       });
     });
 
-    socket.on('xterm:key', key => {
-      shell.write(key);
+    socket.on('init:xterm', (size) => {
+      try {
+        shell = pty.spawn((os.platform() === 'win32' ? 'powershell.exe' : 'bash'), [], {
+          name: 'xterm-color',
+          cols: size.cols,
+          rows: size.rows,
+          cwd: __dirname + '/../demo',
+          env: process.env
+        });
+        socket.emit('xterm:ready', {});
+	socket.on('xterm:key', key => {
+          shell.write(key);
+        });
+        shell.on('data', data => {
+          socket.emit('xterm:data', data);
+        });
+      } catch (error) {
+        socket.emit('xterm:ready', {
+          error
+        });
+      }
     });
 
-    shell.on('data', data => {
-      socket.emit('xterm:data', data);
+    socket.on('disconnect', ()=> {
+      delete shell;
     });
 
   });

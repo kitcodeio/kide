@@ -10,10 +10,20 @@ export class XtermService {
 
   constructor(private socket: SocketService) { }
 
+  init(size: any): Promise<any> {
+    this.socket.emit('init:xterm', size);
+    return new Promise((resolve, reject) => {
+      this.socket.on('xterm:ready').subscribe(data => {
+	if (data.error) return reject(data.error);
+        else return resolve();
+      });
+    });
+  }
+
   on(): Observable<any> {
     return new Observable<any>(observer => {
       this.socket.on('xterm:data').subscribe(data => {
-        observer.next(data);
+        return observer.next(data);
       });
     });
   }

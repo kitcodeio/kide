@@ -33,34 +33,32 @@ export class TerminalComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.termRowHeight = 0.0 + (1.00 * $('#terminal').innerHeight() / 25);
-    this.termColWidth = 0.0 + (1.02 * $('#terminal').innerWidth() / 80);
-    this.startTerminal();
+    let size = this.calculateSize();
+    this.xterm.init(size).then(()=>{
+      this.term = new Terminal({
+        cols: size.cols,
+        rows: size.rows,
+        theme: {
+          background: '#1e1e1e'
+        }
+      });
+      this.term.open(this.terminal.nativeElement);
+      //this.xterm.write(String.fromCharCode(13));
+      this.term.on('key', (key, evt) => {
+        this.xterm.write(key);
+      });
+      this.xterm.on().subscribe(data => {
+        this.term.write(data);
+      });
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   calculateSize(): any {
-    let rows = Math.max(2, Math.floor(window.innerHeight/this.termRowHeight) - 2);
-    let cols = Math.max(3, Math.floor(window.innerWidth/this.termColWidth) - 2);
+    let rows = (Math.floor($('#terminal').innerHeight() / 15)) -4;
+    let cols = (Math.floor($('#terminal').innerWidth() / 9)) -4;
     return {rows, cols};
-  }
-
-  startTerminal(): void {
-    let size = this.calculateSize();  
-    this.term = new Terminal({
-      cols: 157,
-      rows: 17,
-      theme: {
-        background: '#1e1e1e'
-      }
-    });
-    this.term.open(this.terminal.nativeElement);	  
-    this.xterm.write(String.fromCharCode(13));
-    this.term.on('key', (key, evt) => {
-      this.xterm.write(key);
-    });
-    this.xterm.on().subscribe(data => {
-      this.term.write(data);
-    });
   }
 
 }
