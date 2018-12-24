@@ -3,6 +3,7 @@
   <app-tree
     [dir]="dir"
     [open]="open.bind(this)"
+    [reload]="onReady.bind(this)"
     [isRoot]="true"
   ></app-tree>
   <monaco-editor #editor 

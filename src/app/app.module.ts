@@ -9,8 +9,9 @@ import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
 import { BrowserComponent } from './browser/browser.component';
 import { TerminalComponent } from './terminal/terminal.component';
-import { UrlSantizerPipe } from './url-santizer.pipe';
+import { UrlSantizerPipe } from './pipes/url-santizer.pipe';
 import { TreeComponent } from './editor/tree/tree.component';
+import { FilterUriToIdPipe } from './pipes/filter-uri-to-id.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { TreeComponent } from './editor/tree/tree.component';
     BrowserComponent,
     TerminalComponent,
     UrlSantizerPipe,
-    TreeComponent
+    TreeComponent,
+    FilterUriToIdPipe
   ],
   imports: [
     BrowserModule,

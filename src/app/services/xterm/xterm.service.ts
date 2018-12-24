@@ -14,7 +14,7 @@ export class XtermService {
     this.socket.emit('init:xterm', size);
     return new Promise((resolve, reject) => {
       this.socket.on('xterm:ready').subscribe(data => {
-	if (data.error) return reject(data.error);
+	if (data) return reject(data.error);
         else return resolve();
       });
     });

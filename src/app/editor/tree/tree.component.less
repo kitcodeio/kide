@@ -19,6 +19,19 @@
   overflow-x: hidden;
 }
 
+.root-header{
+  background-color: lighten(black, 20%);
+  .name{
+    float: left;
+  }
+  .icons {
+    text-align: right;
+    .fa  {
+      padding-right: 10px;
+    }
+  }
+}
+
 .ul {
   list-style-type: none;
   margin: 0;
@@ -26,6 +39,9 @@
   width: 250px;
   background-color: #252526;
   border-left: 1px solid gray;
+  .selected {
+    background-color: lighten(black, 20%);
+  }
   .li {
     line-height: 1.5em;
     color: #c7c7c7;
