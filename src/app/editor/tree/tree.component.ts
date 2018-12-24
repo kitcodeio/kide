@@ -14,6 +14,7 @@ export class TreeComponent implements OnInit {
   @Input() isRoot: boolean;
   @Input() dir: any[];
   @Input() open: Function;
+  @Input() reload: Function;
   childDir: any[];
 
   constructor(private fs: FileService) { }
@@ -30,13 +31,14 @@ export class TreeComponent implements OnInit {
     });
     else if (el.type == 'dir') {
       if(el.state == 'open') {
-        delete this.dir[index].dir;
         this.dir[index].state = 'close'
       } else {
-	this.fs.readDir(el.uri).then(list => {
-          this.dir[index].dir=list;	
-	  this.dir[index].state = 'open'
-	});
+	if(this.dir[index].dir == undefined)
+            this.fs.readDir(el.uri).then(list => {
+            this.dir[index].dir=list;
+	    this.dir[index].state = 'open';
+	  });
+	else this.dir[index].state = 'open';
       }
     }
   }
