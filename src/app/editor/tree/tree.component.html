@@ -1,4 +1,4 @@
-<div class="ul" [ngClass]="isRoot?'root':null">
+<div class="ul" [ngClass]="isRoot?'root':null" [ngStyle]="{'height': isRoot?getHeight():null}">
   <div class="li root-header" *ngIf="isRoot">
     <div class="icons">
       <i class="fa fa-folder" aria-hidden="true"></i>

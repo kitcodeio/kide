@@ -1,8 +1,8 @@
 <div *ngIf="show">
-  <app-browser></app-browser>
+  <!-- <app-browser></app-browser>  -->
   <div class="position-absolute">
-    <app-editor></app-editor>
-    <app-terminal></app-terminal>
+    <app-editor class="float-right"></app-editor>
+    <app-terminal class="float-right"></app-terminal>
   </div>
 </div>
 <div *ngIf="!show" class="warning">

@@ -17,10 +17,16 @@ export class TreeComponent implements OnInit {
   @Input() reload: Function;
   childDir: any[];
 
-  constructor(private fs: FileService) { }
+  constructor(private fs: FileService) {
+    //this.setDimentions($(document).height(), $(document).width()*3/4);
+  }
 
   setDimentions(h, w): void {
     $(".root").css("height", h);
+  }
+
+  getHeight(): string {
+    return window.screen.availHeight + 'px';
   }
 
   getFileOrDir(el: any, index: number): void {
@@ -43,8 +49,6 @@ export class TreeComponent implements OnInit {
     }
   }
 
-  ngOnInit() { 
-    this.setDimentions($(document).height()*2/3, $(document).width()*3/4);
-  }
+  ngOnInit() { }
 
 }

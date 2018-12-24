@@ -26,14 +26,15 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit() {
     let self = this; 
-    this.setDimentions($(document).height()/3, $(document).width()*3/4);
+    this.setDimentions($(document).height()/3, $(document).width() - 300);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height()/3, $(document).width()*3/4);	  
+      self.setDimentions($(document).height()/3, $(document).width() - 300);	  
     });
   }
 
   ngAfterViewInit() {
     let size = this.calculateSize();
+    console.log(size);
     this.xterm.init(size).then(()=>{
       this.term = new Terminal({
         cols: size.cols,
@@ -56,7 +57,7 @@ export class TerminalComponent implements OnInit {
   }
 
   calculateSize(): any {
-    let rows = (Math.floor($('#terminal').innerHeight() / 15)) -4;
+    let rows = (Math.floor($('#terminal').innerHeight() / 15)) -8;
     let cols = (Math.floor($('#terminal').innerWidth() / 9)) -4;
     return {rows, cols};
   }

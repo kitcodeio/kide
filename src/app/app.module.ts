@@ -12,6 +12,7 @@ import { TerminalComponent } from './terminal/terminal.component';
 import { UrlSantizerPipe } from './pipes/url-santizer.pipe';
 import { TreeComponent } from './editor/tree/tree.component';
 import { FilterUriToIdPipe } from './pipes/filter-uri-to-id.pipe';
+import { SidebarComponent } from './editor/sidebar/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { FilterUriToIdPipe } from './pipes/filter-uri-to-id.pipe';
     TerminalComponent,
     UrlSantizerPipe,
     TreeComponent,
-    FilterUriToIdPipe
+    FilterUriToIdPipe,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

@@ -53,9 +53,9 @@ export class EditorComponent implements OnInit {
   ngOnInit() {
     let self = this;
   
-    this.setDimentions($(document).height()*2/3, $(document).width()*3/4);
+    this.setDimentions($(document).height()*2/3, $(document).width());
     $(window).on('resize', function(){
-      self.setDimentions($(document).height()*2/3, $(document).width()*3/4);	  
+      self.setDimentions($(document).height()*2/3, $(document).width());	  
     });
 
     this.fileChange
