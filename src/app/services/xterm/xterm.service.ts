@@ -32,4 +32,8 @@ export class XtermService {
     this.socket.emit('xterm:key', key);
   }
 
+  resize(size:any): void {
+    this.socket.emit('xterm:resize', size);
+  }
+
 }

@@ -3,6 +3,7 @@ import { MonacoFile, MonacoEditorDirective } from 'ngx-monaco';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ResizeEvent } from 'angular-resizable-element';
 
 import { FileService } from '../services/file/file.service';
 
@@ -25,7 +26,8 @@ export class EditorComponent implements OnInit {
   dir: any[] = [];
 
   file;
-  newFile;
+
+  treeWidth: number = 250;
 
   fileChange = new Subject<MonacoFile>();
 
@@ -53,9 +55,9 @@ export class EditorComponent implements OnInit {
   ngOnInit() {
     let self = this;
   
-    this.setDimentions($(document).height()*2/3, $(document).width());
+    this.setDimentions(window.innerHeight*2/3, window.innerWidth);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height()*2/3, $(document).width());	  
+      self.setDimentions(window.innerHeight*2/3, window.innerWidth);
     });
 
     this.fileChange
@@ -74,6 +76,16 @@ export class EditorComponent implements OnInit {
     this.fs.saveFile(file).then(res => {}).catch(err => {
       console.log(err);
     });
+  }
+
+  onResizeEnd(event: ResizeEvent): void {
+    console.log('Element was resized', event.edges.right);
+    this.treeWidth = this.treeWidth + Number(event.edges.right);
+    //insert these in the apptree tag to make resizing work
+    //mwlResizable
+    //[enableGhostResize]="true"
+    //[resizeEdges]="{right: true}"
+    //(resizeEnd)="onResizeEnd($event)"
   }
 
 }

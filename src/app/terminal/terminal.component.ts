@@ -26,15 +26,17 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit() {
     let self = this; 
-    this.setDimentions($(document).height()/3, $(document).width() - 300);
+    this.setDimentions(window.innerHeight/3, window.innerWidth - 300);
     $(window).on('resize', function(){
-      self.setDimentions($(document).height()/3, $(document).width() - 300);	  
+      self.setDimentions(window.innerHeight/3, window.innerWidth - 300);
+      let size = self.calculateSize();
+      if(self.term) self.term.resize(size.cols, size.rows);
+      self.xterm.resize(size);
     });
   }
 
   ngAfterViewInit() {
     let size = this.calculateSize();
-    console.log(size);
     this.xterm.init(size).then(()=>{
       this.term = new Terminal({
         cols: size.cols,
@@ -44,7 +46,6 @@ export class TerminalComponent implements OnInit {
         }
       });
       this.term.open(this.terminal.nativeElement);
-      //this.xterm.write(String.fromCharCode(13));
       this.term.on('key', (key, evt) => {
         this.xterm.write(key);
       });
@@ -57,8 +58,8 @@ export class TerminalComponent implements OnInit {
   }
 
   calculateSize(): any {
-    let rows = (Math.floor($('#terminal').innerHeight() / 15)) -8;
-    let cols = (Math.floor($('#terminal').innerWidth() / 9)) -4;
+    let rows = Math.floor((window.innerHeight/3)/17.21);
+    let cols = Math.floor((window.innerWidth - 300)/9.25);
     return {rows, cols};
   }
 

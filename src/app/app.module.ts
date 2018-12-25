@@ -13,6 +13,7 @@ import { UrlSantizerPipe } from './pipes/url-santizer.pipe';
 import { TreeComponent } from './editor/tree/tree.component';
 import { FilterUriToIdPipe } from './pipes/filter-uri-to-id.pipe';
 import { SidebarComponent } from './editor/sidebar/sidebar/sidebar.component';
+import { ResizableModule } from 'angular-resizable-element';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SidebarComponent } from './editor/sidebar/sidebar/sidebar.component';
     FormsModule,
     BrowserAnimationsModule,
     MonacoEditorModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ResizableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
