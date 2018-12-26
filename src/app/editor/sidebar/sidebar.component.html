@@ -1,0 +1,38 @@
+<div class="sidebar float-left">
+  <ul>
+    <li class="selected"><i class="fa fa-file-code-o" aria-hidden="true"></i></li>
+    <li (click)="viewEndpoint()"><i class="fa fa-external-link" aria-hidden="true"></i></li>
+  </ul>
+</div>
+
+<div class="modal fade" id="set-port" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">[sudo]Enter $PORT:</h5>
+      </div>
+      <div class="modal-body">
+        Enter the port number you want to access:
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-3 col-form-label">$PORT =</label>
+          <div class="col-sm-5 input-field">
+            <input type="text" id="port-number" class="form-control" [(ngModel)]="$PORT">
+          </div>
+        </div>
+        <small id="port-example" class="form-text text-muted">
+          <em>e.g.</em> $PORT=8080 will let you access <em>http://localhost:8080</em> using this link.
+	</small>
+	<br>
+        <div class="checkbox">
+	  <label style="padding-left:0"><input [(ngModel)]="remeberPort" type="checkbox"> don't ask me again!</label>
+	</div>
+	<small>You can change $PORT value from settings.</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-close" data-dismiss="modal">Close</button>
+        <button type="button" class="btn" (click)="saveSettings()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
