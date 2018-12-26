@@ -16,6 +16,8 @@ export class SidebarComponent implements OnInit {
   $PORT: number;
   remeberPort: boolean;
 
+  new_port: number;
+
   constructor(private http: HttpClient, private url: UrlService, private toastr: ToastrService) { }
 
   getHeight(): string {
@@ -28,25 +30,29 @@ export class SidebarComponent implements OnInit {
 
   viewEndpoint(): void {
     if(!this.remeberPort) $('#set-port').modal('show');
+    else window.open(this.url.end_point, '_blank');
   }
 
-  saveSettings(): void {
-    this.http.post(this.url.value + 'settings', {
+  saveSettings(key?: string): void {
+    this.http.post(this.url.server + 'settings', {
       port: this.$PORT,
       remeberPort: this.remeberPort
     }).subscribe((data: any) => {
       if (data.status == 'saved') {
         $('.modal').modal('hide');
-	      this.toastr.success(`port: ${this.$PORT} exposed`, 'Success', { positionClass:'toast-bottom-right' });
+	if (this.new_port !== this.$PORT) this.toastr.success(`port: ${this.$PORT} exposed`, 'Success', { positionClass:'toast-bottom-right' });
+	if (key == 'view') window.open(this.url.end_point, '_blank');
+        this.new_port = this.$PORT;
       }
     });
   }
 
   updateSettings(): void {
-    this.http.get(this.url.value + 'settings').subscribe((data: any) => {
+    this.http.get(this.url.server + 'settings').subscribe((data: any) => {
       if (!data.error) {
-        this.$PORT = data.port,
-	this.remeberPort = data.remeberPort
+        this.$PORT = data.port;
+	this.remeberPort = data.remeberPort;
+        this.new_port = this.$PORT;
       }
     });
   }

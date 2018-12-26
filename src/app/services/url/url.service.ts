@@ -5,9 +5,11 @@ import { Injectable } from '@angular/core';
 })
 export class UrlService {
 
-  value: string = '/';
+  end_point: string = 'https://kitcode.io';
+  server: string = '/';
 
   constructor() {
-    if(window.location.host.includes('localhost')) this.value = 'http://localhost:8080/';
+    if(window.location.host.includes('localhost')) this.server = 'http://localhost:8080/';
+    this.end_point = window.location.protocol+'//'+window.location.host.split('-')[0]+'-app.kitcode.io';
   }
 }
