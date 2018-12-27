@@ -16,7 +16,7 @@ export class TreeComponent implements OnInit {
   @Input() open: Function;
   @Input() reload: Function;
   @Input() width: number;
-  childDir: any[];
+  @Input() createFile: Function;
 
   constructor(private fs: FileService) {
     //this.setDimentions($(document).height(), $(document).width()*3/4);
@@ -41,8 +41,8 @@ export class TreeComponent implements OnInit {
         this.dir[index].state = 'close'
       } else {
 	if(this.dir[index].dir == undefined)
-            this.fs.readDir(el.uri).then(list => {
-            this.dir[index].dir=list;
+            this.fs.readDir(el.uri).then(data => {
+            this.dir[index].dir=data.dirList;
 	    this.dir[index].state = 'open';
 	  });
 	else this.dir[index].state = 'open';
@@ -50,8 +50,6 @@ export class TreeComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    console.log(this.dir);
-  }
+  ngOnInit() { }
 
 }

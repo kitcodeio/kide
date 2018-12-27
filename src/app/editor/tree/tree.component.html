@@ -1,14 +1,14 @@
 <div class="ul" [ngClass]="isRoot?'root':null" [ngStyle]="{'height': isRoot?getHeight():null, 'width':width+'px'}">
   <div class="li root-header position-fixed" *ngIf="isRoot">
     <div class="icons">
-      <i class="fa fa-folder" aria-hidden="true"></i>
-      <i class="fa fa-file" aria-hidden="true"></i>
+      <!-- <i class="fa fa-folder" aria-hidden="true"></i> -->
+      <i class="fa fa-file" (click)="createFile()" aria-hidden="true"></i>
       <i class="fa fa-refresh" aria-hidden="true" (click)="reload()"></i>
     </div>
   </div>
   <div class="li" *ngIf="isRoot">...</div>
   <div *ngFor="let el of dir; let i = index;">
-    <div class="li" (click)="getFileOrDir(el, i)">
+    <div class="li" id="{{el.uri | filterUriToId}}"  (click)="getFileOrDir(el, i)">
       <i *ngIf="el.type == 'dir'" [ngClass]="(el.state == 'open')?'open':null" class="fa fa-caret-right"
         aria-hidden="true"></i> {{el.name || 'undefined' }}
     </div>

@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FilterUriToIdPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    return value.slice(3).split('/').join('-');
+    return value.slice(value.indexOf('/') + 1).replace(/\//g, '-').replace(/\./g, '_');
   }
 
 }

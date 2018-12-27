@@ -9,12 +9,25 @@ import { FileService } from '../services/file/file.service';
 
 declare var $:any;
 
+if (!Array.prototype.hasOwnProperty("path")) {
+  Object.defineProperty(Array.prototype, "path", {
+    get: function() {
+      this.pop();
+      return this.join('/');
+    }
+  });
+}
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.less']
 })
 export class EditorComponent implements OnInit {
+
+  activeFile: string;
+
+  activeDir: string;
 
   theme = 'vs-dark';
 
@@ -29,17 +42,25 @@ export class EditorComponent implements OnInit {
 
   treeWidth: number = 250;
 
+  newFilePath: string;
+
   fileChange = new Subject<MonacoFile>();
 
   @ViewChild(MonacoEditorDirective) editor: MonacoEditorDirective;
 
   open(file: any): void {
     this.file = file;
+    this.activeFile = file.uri,
+    this.activeDir = file.uri.split('/').path;
+    $('.selected').removeClass('selected');
+    $('#'+file.uri.slice(file.uri.indexOf('/') + 1).replace(/\//g, '-').replace(/\./g, '_')).addClass('selected');
   }
 
   onReady(editor: monaco.editor.IEditor) {
     this.fs.init().then(data => {
-      this.dir = data;
+      this.dir = data.dirList;
+      this.activeDir = data.dirPath;
+      if (this.dir.length == 0) this.createNewFile();
     });
   }
 
@@ -75,6 +96,23 @@ export class EditorComponent implements OnInit {
   autoSave(file: any): void {
     this.fs.saveFile(file).then(res => {}).catch(err => {
       console.log(err);
+    });
+  }
+
+  createNewFile(): void {
+    this.newFilePath = this.activeDir+'/Untitled.js';
+    $('#create-new-file').modal('show');
+  }
+
+  createFile(): void {
+    let file = {
+      uri: this.newFilePath,
+      content: ''
+    };
+    this.fs.saveFile(file).then(err => {
+      if (err) return console.error(err);
+      this.open(file);
+      $('#create-new-file').modal('hide');
     });
   }
 
