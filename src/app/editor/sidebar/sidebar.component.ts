@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
-import { UrlService } from '../../services/url/url.service'
+import { UrlService } from '../../services/url/url.service';
+import { ViewService } from '../../services/view/view.service'
 
 declare var $:any;
 
@@ -18,7 +19,7 @@ export class SidebarComponent implements OnInit {
 
   new_port: number;
 
-  constructor(private http: HttpClient, private url: UrlService, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, private url: UrlService, private toastr: ToastrService, public view: ViewService) { }
 
   getHeight(): string {
     return window.innerHeight + 'px';

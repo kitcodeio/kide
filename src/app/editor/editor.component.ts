@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ResizeEvent } from 'angular-resizable-element';
 
+import { ViewService } from '../services/view/view.service';
 import { FileService } from '../services/file/file.service';
 
 declare var $:any;
@@ -33,7 +34,8 @@ export class EditorComponent implements OnInit {
 
   options = {
     quickSuggestions: true,
-    experimentalDecorators: false
+    experimentalDecorators: false,
+    automaticLayout: true
   };
 
   dir: any[] = [];
@@ -64,7 +66,7 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  constructor(private fs: FileService, private toastr: ToastrService) { }
+  constructor(private fs: FileService, private toastr: ToastrService, public view: ViewService) { }
 
   setDimentions(h, w): void {
     $("#editor").css("height", h);
@@ -75,7 +77,7 @@ export class EditorComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-  
+
     this.setDimentions(window.innerHeight*2/3, window.innerWidth);
     $(window).on('resize', function(){
       self.setDimentions(window.innerHeight*2/3, window.innerWidth);
