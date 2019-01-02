@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angula
 import { Terminal } from 'xterm';
 
 import { XtermService } from '../services/xterm/xterm.service';
+import { ViewService } from '../services/view/view.service';
 
 declare var $:any;
 
@@ -17,7 +18,7 @@ export class TerminalComponent implements OnInit {
   termRowHeight;
   termColWidth;
 	
-  constructor(private xterm: XtermService) { }
+  constructor(private xterm: XtermService, private view: ViewService) { }
 
   setDimentions(h, w): void {
     $("#terminal").css("height", h);
@@ -32,6 +33,13 @@ export class TerminalComponent implements OnInit {
       let size = self.calculateSize();
       if(self.term) self.term.resize(size.cols, size.rows);
       self.xterm.resize(size);
+    });
+    this.view.treeVisibilityListener().subscribe((status: boolean) => {
+      let val = (status)?300:50;
+      this.setDimentions(window.innerHeight/3, window.innerWidth - val);
+      let size = this.calculateSize(val);
+      if(this.term) this.term.resize(size.cols, size.rows);
+      this.xterm.resize(size);
     });
   }
 
@@ -57,10 +65,9 @@ export class TerminalComponent implements OnInit {
     });
   }
 
-  calculateSize(): any {
+  calculateSize(val?: number): any {
     let rows = Math.floor((window.innerHeight/3)/17.21);
-    let cols = Math.floor((window.innerWidth - 300)/9.25);
+    let cols = Math.floor((window.innerWidth - (val || 300))/9.25);
     return {rows, cols};
   }
-
 }

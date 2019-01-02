@@ -6,8 +6,14 @@
   </div>
 </div>
 <div *ngIf="!show" class="warning">
-  <h1><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
-  <h2>Screen resolution not high enough</h2>
-  <h5><em>minimum resolution required: 640x480</em></h5>
-  <h6><em>current resolution: {{width}}x{{height}}</em></h6>
+  <div *ngIf="iFrame()">
+    <h1><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+    <h2>Screen resolution not high enough</h2>
+    <h5><em>minimum resolution required: 640x480</em></h5>
+    <h6><em>current resolution: {{width}}x{{height}}</em></h6>
+  </div>
+  <div *ngIf="!iFrame()">
+    <h1><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+    <h2>kIDE doest not support embed solution yet </h2>
+  </div>
 </div>

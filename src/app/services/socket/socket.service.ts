@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 
+import { UrlService } from '../url/url.service'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -9,8 +11,8 @@ export class SocketService {
 
   socket: any;
 
-  constructor() {
-    this.socket = io('http://localhost:8080');
+  constructor(private url: UrlService) {
+    this.socket = io(this.url.server);
   }
 
   on(evt): Observable<any> {
