@@ -9,7 +9,7 @@ export class UrlService {
   server: string = '/';
 
   constructor() {
-    if(window.location.host.includes('localhost')) this.server = 'http://localhost:8080/';
+    if(window.location.host.includes('localhost')) this.server = 'http://localhost:54123/';
     this.end_point = window.location.protocol+'//'+window.location.host.split('-')[0]+'-app.kitcode.io';
   }
 }

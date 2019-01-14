@@ -27,9 +27,9 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit() {
     let self = this; 
-    this.setDimentions(window.innerHeight/3, window.innerWidth - 300);
+    this.setDimentions(window.innerHeight/3, window.innerWidth - 250);
     $(window).on('resize', function(){
-      self.setDimentions(window.innerHeight/3, window.innerWidth - 300);
+      self.setDimentions(window.innerHeight/3, window.innerWidth - 250);
       let size = self.calculateSize();
       if(self.term) self.term.resize(size.cols, size.rows);
       self.xterm.resize(size);

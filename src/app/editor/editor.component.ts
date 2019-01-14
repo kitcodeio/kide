@@ -42,7 +42,7 @@ export class EditorComponent implements OnInit {
 
   file;
 
-  treeWidth: number = 250;
+  treeWidth: number = 200;
 
   newFilePath: string;
 
@@ -58,11 +58,20 @@ export class EditorComponent implements OnInit {
     $('#'+file.uri.slice(file.uri.indexOf('/') + 1).replace(/\//g, '-').replace(/\./g, '_')).addClass('selected');
   }
 
-  onReady(editor: monaco.editor.IEditor) {
+  onReady(editor?: monaco.editor.IEditor) {
     this.fs.init().then(data => {
       this.dir = data.dirList;
       this.activeDir = data.dirPath;
-      if (this.dir.length == 0) this.createNewFile();
+      if (this.dir.length == 0) return this.createNewFile();
+      for(let i = 0; i < this.dir.length; i++){
+	let el = this.dir[i];
+        let extension = el.name.slice(el.name.lastIndexOf('.') + 1);
+        if(el.type == 'file' && el.name.indexOf('.') !== 0 && extension !== 'md' && extension !== 'pem') return this.fs.readFile(el.uri).then(content => {
+          this.open({
+            uri: el.uri, content
+          });
+        });
+      };
     });
   }
 
@@ -115,6 +124,7 @@ export class EditorComponent implements OnInit {
       if (err) return console.error(err);
       this.open(file);
       $('#create-new-file').modal('hide');
+      if (this.dir.length == 0) this.onReady();
     });
   }
 
