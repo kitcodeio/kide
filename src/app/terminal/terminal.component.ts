@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Terminal } from 'xterm';
+import  { HttpClient } from '@angular/common/http'
 
 import { XtermService } from '../services/xterm/xterm.service';
 import { ViewService } from '../services/view/view.service';
+import { UrlService } from '../services/url/url.service';
 
 declare var $:any;
 
@@ -18,7 +20,7 @@ export class TerminalComponent implements OnInit {
   termRowHeight;
   termColWidth;
 	
-  constructor(private xterm: XtermService, private view: ViewService) { }
+  constructor(private xterm: XtermService, private view: ViewService, private http: HttpClient, private url: UrlService) { }
 
   setDimentions(h, w): void {
     $("#terminal").css("height", h);
@@ -44,6 +46,7 @@ export class TerminalComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    let self = this;
     let size = this.calculateSize();
     this.xterm.init(size).then(()=>{
       this.term = new Terminal({
@@ -59,6 +62,9 @@ export class TerminalComponent implements OnInit {
       });
       this.xterm.on().subscribe(data => {
         this.term.write(data);
+      });
+      this.http.get(this.url.server + 'setup').subscribe(res => {
+        if (!res.status) this.xterm.write(res.modules.join(' && ') + '\n');
       });
     }).catch(err => {
       console.error(err);
