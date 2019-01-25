@@ -107,8 +107,7 @@ var jsio = (function init() {
       return jsio.__require(fromDir, fromFile, item, opts);
     }
 
-
-  function require(fromDir, fromFile, item) { 
+    function require(fromDir, fromFile, item) { 
       var moduleDef = jsio.__loadModule(fromDir, item);
 
         if(!moduleDef){
