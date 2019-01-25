@@ -1,2 +1,2 @@
 service nginx restart
-node /kide/lib/index.js /root/project
+node /kide//index.js /root/project
