@@ -19,6 +19,7 @@ export class AppComponent {
   }
 
   iFrame(){
+    return true;
     try{
       return (window.top !== window.self || window.location.host.includes('localhost'));
     } catch (err) {
