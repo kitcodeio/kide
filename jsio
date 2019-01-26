@@ -64,6 +64,7 @@ var jsio = (function init() {
             return [
               resolveRelativePath(util.concat(modulePath, '.js')),
               resolveRelativePath(util.concat(modulePath, '/index.js')),
+              resolveRelativePath(util.concat(modulePath, '/', filename,'.js')),
               resolveRelativePath(util.concat(modulePath, '/lib/index.js')),
               resolveRelativePath(util.concat(modulePath, '/lib/', filename, '.js'))
             ];
@@ -307,18 +308,13 @@ jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, prepro
     || item == "debug" 
     || item == "child_process" 
     || item == "node-pty" 
-    || item == "pseudomap" 
-    || item == "yallist" 
     || item == "http" 
     || item == "https" 
     || item == "os" 
     || item == "stream" 
-    || item == "url" 
     || item == "zlib" 
-    || item == "events" 
     || item == "crypto" 
     || item == "path" 
-    || item == "util" 
     || item == "fs" 
     || item == "vm" 
     || item == "net"
