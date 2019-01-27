@@ -59,7 +59,9 @@ var jsio = (function init() {
         getPossiblePaths: function(directory, filename) {
             var modulePath = util.concat(directory, filename);
 
-            if(util.getExtension(modulePath)) return [modulePath];
+            if (util.getExtension(modulePath)) {
+                return [resolveRelativePath(modulePath)];
+            }
  
             return [
               resolveRelativePath(util.concat(modulePath, '.js')),
@@ -101,13 +103,15 @@ var jsio = (function init() {
         var value = jsio.__pathCache[subpath];
 
         if (value) {
+            pathString = pathString ? pathString : subpath;
+
             return util.getPossiblePaths(value, pathString);
         }
-   
+
         if (util.isRelativePath(modulePath)) {
             return util.getPossiblePaths(directory, modulePath);
         }
-
+   
         return util.getPossiblePaths(modulePath);
     }
 
@@ -265,8 +269,8 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
         src = fetch(modulePath);
 
         if (src) {
-          var i = modulePath.lastIndexOf('.');
-          var ext = modulePath.substring(i + 1);
+            var i = modulePath.lastIndexOf('.');
+            var ext = modulePath.substring(i + 1);
             if(ext == "json") src = jsio.__util.concat("module.exports =", src);
             
             src = jsio.__util.concat("(function (exports, require, module, __filename, __dirname) {", src, "})");
@@ -302,7 +306,7 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
   if(
-    item == "shelljs" 
+    item == "domain"
     || item == "bufferutil"
     || item == "utf-8-validate"
     || item == "debug" 
