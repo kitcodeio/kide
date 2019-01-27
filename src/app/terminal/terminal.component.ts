@@ -37,7 +37,7 @@ export class TerminalComponent implements OnInit {
       self.xterm.resize(size);
     });
     this.view.treeVisibilityListener().subscribe((status: boolean) => {
-      let val = (status)?300:50;
+      let val = (status)?250:50;
       this.setDimentions(window.innerHeight/3, window.innerWidth - val);
       let size = this.calculateSize(val);
       if(this.term) this.term.resize(size.cols, size.rows);
@@ -63,7 +63,7 @@ export class TerminalComponent implements OnInit {
       this.xterm.on().subscribe(data => {
         this.term.write(data);
       });
-      this.http.get(this.url.server + 'setup').subscribe(res => {
+      this.http.get(this.url.server + 'setup').subscribe((res: any) => {
         if (!res.status) this.xterm.write(res.modules.join(' && ') + '\n');
       });
     }).catch(err => {
@@ -73,7 +73,7 @@ export class TerminalComponent implements OnInit {
 
   calculateSize(val?: number): any {
     let rows = Math.floor((window.innerHeight/3)/17.21);
-    let cols = Math.floor((window.innerWidth - (val || 300))/9.25);
+    let cols = Math.floor((window.innerWidth - (val || 250))/9.25);
     return {rows, cols};
   }
 }
