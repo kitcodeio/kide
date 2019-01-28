@@ -46,12 +46,12 @@ var jsio = (function init() {
         isRelativePath: function(path) {
             return path.charAt(0) == '.' ? true : false;
         },
-        getExtension: function (modulePath){ 
+        getExtension: function(modulePath) {
             var moduleSegments = modulePath.split('.');
-            var ext = moduleSegments[moduleSegments.length -1];
+            var ext = moduleSegments[moduleSegments.length - 1];
 
-            if(ext == "js" || ext == "json"){
-              return ext;
+            if (ext == "js" || ext == "json") {
+                return ext;
             }
 
             return false;
@@ -60,13 +60,13 @@ var jsio = (function init() {
             if (filename && util.getExtension(filename)) {
                 return [resolveRelativePath(util.concat(directory, filename))];
             }
- 
+
             return [
-              resolveRelativePath(util.concat(directory, filename, '.js')),
-              resolveRelativePath(util.concat(directory, filename, '/index.js')),
-              resolveRelativePath(util.concat(directory, filename, '/', filename,'.js')),
-              resolveRelativePath(util.concat(directory, filename, '/lib/index.js')),
-              resolveRelativePath(util.concat(directory, filename, '/lib/', filename, '.js'))
+                resolveRelativePath(util.concat(directory, filename, '.js')),
+                resolveRelativePath(util.concat(directory, filename, '/index.js')),
+                resolveRelativePath(util.concat(directory, filename, '/', filename, '.js')),
+                resolveRelativePath(util.concat(directory, filename, '/lib/index.js')),
+                resolveRelativePath(util.concat(directory, filename, '/lib/', filename, '.js'))
             ];
         },
         splitPath: function(path, result) {
@@ -90,11 +90,11 @@ var jsio = (function init() {
             path = tempPath;
             tempPath = tempPath.replace(/(^|\/)(?!\.?\.\/)([^\/]+)\/\.\.\//g, '$1');
         } while (path != tempPath);
-      
+
         return path.replace(/\.\//g, '');
     }
 
-    function resolveModulePath(directory, modulePath) { 
+    function resolveModulePath(directory, modulePath) {
         var pathSegments = modulePath.split('/');
         var subpath = pathSegments.slice(0, 1).join('/');
         var pathString = pathSegments.slice(1).join('/');
@@ -109,19 +109,19 @@ var jsio = (function init() {
         if (util.isRelativePath(modulePath)) {
             return util.getPossiblePaths(directory, modulePath);
         }
-   
+
         return util.getPossiblePaths(modulePath);
     }
 
     function _require(fromDir, fromFile, item, opts) {
-      return jsio.__require(fromDir, fromFile, item, opts);
+        return jsio.__require(fromDir, fromFile, item, opts);
     }
-    
+
     function require(fromDir, fromFile, item) {
         var moduleDef = jsio.__loadModule(fromDir, item);
 
-        if(!moduleDef){
-          return console.log(util.concat("Error: couldnot find module '", item ,"' from '", fromDir, fromFile, "'")); 
+        if (!moduleDef) {
+            return console.log(util.concat("Error: couldnot find module '", item, "' from '", fromDir, fromFile, "'"));
         }
 
         if (!moduleDef.exports) {
@@ -169,9 +169,9 @@ var jsio = (function init() {
     }
 
     function loadModule(fromDir, item) {
-      var possibilities = resolveModulePath(fromDir, item);
+        var possibilities = resolveModulePath(fromDir, item);
 
-      return jsio.__findModule(possibilities);
+        return jsio.__findModule(possibilities);
     }
 
     function execModule(jsio, moduleDef) {
@@ -179,7 +179,7 @@ var jsio = (function init() {
             exports = moduleDef.exports,
             filename = moduleDef.filename,
             directory = moduleDef.directory;
-            
+
         fn.call(exports, exports, jsio, moduleDef, filename, directory);
     }
 
@@ -226,8 +226,10 @@ var fetch = function(p) {
     }
 };
 
-var Eval = function(moduleDef) {    
-    moduleDef.src = jsio('vm').runInThisContext(moduleDef.src, {filename: moduleDef.path});
+var Eval = function(moduleDef) {
+    moduleDef.src = jsio('vm').runInThisContext(moduleDef.src, {
+        filename: moduleDef.path
+    });
 
     return moduleDef;
 };
@@ -269,8 +271,8 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
         if (src) {
             var i = modulePath.lastIndexOf('.');
             var ext = modulePath.substring(i + 1);
-            if(ext == "json") src = jsio.__util.concat("module.exports =", src);
-            
+            if (ext == "json") src = jsio.__util.concat("module.exports =", src);
+
             src = jsio.__util.concat("(function (exports, require, module, __filename, __dirname) {", src, "})");
             setCachedSrc(modulePath, src);
 
@@ -303,8 +305,8 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
 });
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
-  if(process.binding('natives')[item] || item =='node-pty' || item == "debug" || item == "bufferutil" || item == "utf-8-validate") {
-      return require(item); 
+    if (process.binding('natives')[item] || item == 'node-pty' || item == "debug" || item == "bufferutil" || item == "utf-8-validate") {
+        return require(item);
     }
 
     jsio.__preprocess = jsio.__util.bind(preprocess, null, preprocessors);
