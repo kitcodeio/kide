@@ -269,9 +269,9 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
         src = fetch(modulePath);
 
         if (src) {
-            var i = modulePath.lastIndexOf('.');
-            var ext = modulePath.substring(i + 1);
-            if (ext == "json") src = jsio.__util.concat("module.exports =", src);
+            if (jsio.__util.getExtension(modulePath) == "json") {
+                src = jsio.__util.concat("module.exports =", src);
+            }
 
             src = jsio.__util.concat("(function (exports, require, module, __filename, __dirname) {", src, "})");
             setCachedSrc(modulePath, src);
