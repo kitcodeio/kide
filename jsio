@@ -228,8 +228,8 @@ var fetch = function(p) {
     }
 };
 
-var Eval = function(moduleDef) {   
-    moduleDef.src = jsio('vm').runInThisContext(moduleDef.src);
+var Eval = function(moduleDef) {    
+    moduleDef.src = jsio('vm').runInThisContext(moduleDef.src, {filename: moduleDef.path});
 
     return moduleDef;
 };
@@ -306,7 +306,8 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
   if(
-    item == "domain"
+     item == "domain"
+    || item == "buffer"
     || item == "bufferutil"
     || item == "utf-8-validate"
     || item == "debug" 
