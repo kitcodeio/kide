@@ -57,18 +57,16 @@ var jsio = (function init() {
             return false;
         },
         getPossiblePaths: function(directory, filename) {
-            var modulePath = util.concat(directory, filename);
-
-            if (util.getExtension(modulePath)) {
-                return [resolveRelativePath(modulePath)];
+            if (filename && util.getExtension(filename)) {
+                return [resolveRelativePath(util.concat(directory, filename))];
             }
  
             return [
-              resolveRelativePath(util.concat(modulePath, '.js')),
-              resolveRelativePath(util.concat(modulePath, '/index.js')),
-              resolveRelativePath(util.concat(modulePath, '/', filename,'.js')),
-              resolveRelativePath(util.concat(modulePath, '/lib/index.js')),
-              resolveRelativePath(util.concat(modulePath, '/lib/', filename, '.js'))
+              resolveRelativePath(util.concat(directory, filename, '.js')),
+              resolveRelativePath(util.concat(directory, filename, '/index.js')),
+              resolveRelativePath(util.concat(directory, filename, '/', filename,'.js')),
+              resolveRelativePath(util.concat(directory, filename, '/lib/index.js')),
+              resolveRelativePath(util.concat(directory, filename, '/lib/', filename, '.js'))
             ];
         },
         splitPath: function(path, result) {
