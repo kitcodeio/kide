@@ -303,25 +303,7 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
 });
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
-  if(
-     item == "domain"
-    || item == "buffer"
-    || item == "bufferutil"
-    || item == "utf-8-validate"
-    || item == "debug" 
-    || item == "child_process" 
-    || item == "node-pty" 
-    || item == "http" 
-    || item == "https" 
-    || item == "os" 
-    || item == "stream" 
-    || item == "zlib" 
-    || item == "crypto" 
-    || item == "path" 
-    || item == "fs" 
-    || item == "vm" 
-    || item == "net"
-  ) {
+  if(process.binding('natives')[item] || item =='node-pty' || item == "debug" || item == "bufferutil" || item == "utf-8-validate") {
       return require(item); 
     }
 
