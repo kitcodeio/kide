@@ -282,22 +282,22 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
             var modulePath = jsio.__util.concat(jsioPaths[i], item);
             possibilities = jsio.__util.getPossiblePaths(modulePath);
 
-                var entryFile = JSON.parse(fetch(jsio.__util.concat(modulePath, "/package.json"))).main;
-                entryFile = jsio.__util.concat(modulePath, "/", entryFile);
+            var entryFile = JSON.parse(fetch(jsio.__util.concat(modulePath, "/package.json"))).main;
+            entryFile = jsio.__util.concat(modulePath, "/", entryFile);
 
-                if(entryFile && !jsio.__util.getExtension(entryFile)){
-                  entryFile = jsio.__util.concat(entryFile, '.js');
-                }
+            if (entryFile && !jsio.__util.getExtension(entryFile)) {
+                entryFile = jsio.__util.concat(entryFile, '.js');
+            }
 
-                if(entryFile){ 
-                  possibilities.push(entryFile);
-                }
+            if (entryFile) {
+                possibilities.push(entryFile);
+            }
 
             moduleDef = jsio.__findModule(possibilities);
 
             if (moduleDef) {
-                if(entryFile){ 
-                  setPathCache(modulePath, moduleDef.path);
+                if (entryFile) {
+                    setPathCache(modulePath, moduleDef.path);
                 }
 
                 setPathCache(item, moduleDef.path);
