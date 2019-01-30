@@ -58,13 +58,23 @@ var jsio = (function init() {
         },
         getPossiblePaths: function(modulePath) {
             if (util.getExtension(modulePath)) {
-                return [resolveRelativePath(modulePath)];
+                return [util.resolveRelativePath(modulePath)];
             }
 
             return [
-                util.concat(resolveRelativePath(modulePath), '.js'),
-                util.concat(resolveRelativePath(modulePath), '/index.js'),
+                util.concat(util.resolveRelativePath(modulePath), '.js'),
+                util.concat(util.resolveRelativePath(modulePath), '/index.js'),
             ];
+        },
+        resolveRelativePath: function(path) {
+            var tempPath = path.replace(/\/+/g, '/').replace(/\/\.\//g, '/');
+
+            do {
+                path = tempPath;
+                tempPath = tempPath.replace(/(^|\/)(?!\.?\.\/)([^\/]+)\/\.\.\/*/g, '$1');
+            } while (path != tempPath);
+
+            return path.replace(/\.\//g, '').replace(/\/$/g, '');
         },
         splitPath: function(path, result) {
             var i = path.lastIndexOf('/') + 1;
@@ -80,20 +90,9 @@ var jsio = (function init() {
 
     var jsioPathCache = [];
 
-    function resolveRelativePath(path) {
-        var tempPath = path.replace(/\/+/g, '/').replace(/\/\.\//g, '/');
-
-        do {
-            path = tempPath;
-            tempPath = tempPath.replace(/(^|\/)(?!\.?\.\/)([^\/]+)\/\.\.\/*/g, '$1');
-        } while (path != tempPath);
-
-        return path.replace(/\.\//g, '').replace(/\/$/g, '');
-    }
-
     function resolveModulePath(fromDir, modulePath) {
         if (util.isRelativePath(modulePath)) {
-            modulePath = resolveRelativePath(util.concat(fromDir, modulePath));
+            modulePath = util.resolveRelativePath(util.concat(fromDir, modulePath));
         }
 
         if (jsio.__pathCache[modulePath]) {
@@ -104,6 +103,10 @@ var jsio = (function init() {
     }
 
     function loader(fromDir, fromFile, item, opts) {
+        if (process.binding('natives')[item] || item == 'node-pty' || item == "bufferutil" || item == "utf-8-validate") {
+            return require(item);
+        }
+
         return jsio.__require(fromDir, fromFile, item, opts);
     }
 
@@ -240,7 +243,7 @@ var setCachedSrc = function(path, src) {
 };
 
 var setPathCache = function(baseMod, modulePath) {
-    if (!(baseMod in jsio.__pathCache)) {
+    if (!jsio.__pathCache[baseMod]) {
         jsio.__pathCache[baseMod] = modulePath;
     }
 };
@@ -256,6 +259,11 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
 
     for (i = 0; i < possibilities.length; i++) {
         modulePath = possibilities[i];
+
+        if (jsio.__srcCache[modulePath]) {
+            return this.supr([modulePath]);
+        }
+
         src = fetch(modulePath);
 
         if (src) {
@@ -273,30 +281,37 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
 
 jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
     var moduleDef = this.supr(fromDir, item),
-        possibilities, jsioPaths, i;
+        util = jsio.__util,
+        modulePath, entryFile, packageDotJson, possibilities, jsioPaths, i;
 
     if (!moduleDef) {
         jsioPaths = jsio.path.get();
 
         for (i = 0; i < jsioPaths.length; i++) {
-            var modulePath = jsio.__util.concat(jsioPaths[i], item);
-            possibilities = jsio.__util.getPossiblePaths(modulePath);
+            entryFile = null;
+            modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", item));
+            packageDotJson = fetch(util.concat(modulePath, "/package.json"));
 
-            var entryFile = JSON.parse(fetch(jsio.__util.concat(modulePath, "/package.json"))).main;
-            entryFile = jsio.__util.concat(modulePath, "/", entryFile);
-
-            if (entryFile && !jsio.__util.getExtension(entryFile)) {
-                entryFile = jsio.__util.concat(entryFile, '.js');
+            if (packageDotJson) {
+                entryFile = JSON.parse(packageDotJson).main;
             }
 
             if (entryFile) {
+                entryFile = util.concat(modulePath, "/", entryFile);
+                entryFile = util.resolveRelativePath(entryFile);
+                entryFile = util.getExtension(entryFile) ? entryFile : util.concat(entryFile, '.js');
+            }
+
+            possibilities = util.getPossiblePaths(modulePath);
+
+            if (entryFile && !possibilities[entryFile]) {
                 possibilities.push(entryFile);
             }
 
             moduleDef = jsio.__findModule(possibilities);
 
             if (moduleDef) {
-                if (entryFile) {
+                if (entryFile && !possibilities[entryFile]) {
                     setPathCache(modulePath, moduleDef.path);
                 }
 
@@ -311,10 +326,6 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
 });
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
-    if (process.binding('natives')[item] || item == 'node-pty' || item == "bufferutil" || item == "utf-8-validate") {
-        return require(item);
-    }
-
     jsio.__preprocess = jsio.__util.bind(preprocess, null, preprocessors);
 
     return this.supr(fromDir, fromFile, item);
@@ -330,6 +341,51 @@ jsio.path = {
     value: []
 };
 
-jsio.path.add('node_modules/')
+jsio.path.add('node_modules')
+jsio.path.add('scripts');
 
-jsio(process.argv[2])
+var arr = [
+    'shelljs',
+    'shelljs/src/cat.js',
+    'shelljs/src/cd.js',
+    'shelljs/src/chmod.js',
+    'shelljs/src/common.js',
+    'shelljs/src/cp.js',
+    'shelljs/src/dirs.js',
+    'shelljs/src/echo.js',
+    'shelljs/src/error.js',
+    'shelljs/src/exec.js',
+    'shelljs/src/find.js',
+    'shelljs/src/grep.js',
+    'shelljs/src/head.js',
+    'shelljs/src/ln.js',
+    'shelljs/src/mkdir.js',
+    'shelljs/src/mv.js',
+    'shelljs/src/popd.js',
+    'shelljs/src/pushd.js',
+    'shelljs/src/pwd.js',
+    'shelljs/src/rm.js',
+    'shelljs/src/sed.js',
+    'shelljs/src/set.js',
+    'shelljs/src/sort.js',
+    'shelljs/src/tail.js',
+    'shelljs/src/tempdir.js',
+    'shelljs/src/test.js',
+    'shelljs/src/to.js',
+    'shelljs/src/toEnd.js',
+    'shelljs/src/touch.js',
+    'shelljs/src/uniq.js',
+    'shelljs/src/which.js'
+]
+
+arr.forEach(function(modulePath) {
+    jsio(modulePath, ['preprocessors/compiler']);
+})
+
+//jsio(process.argv[2]);
+
+jsio(process.argv[2], ['preprocessors/compiler']);
+
+jsio('preprocessors/compiler').generateSrc(function(str) {
+    console.log(jsio.__util.concat(str, "jsio('", process.argv[2], "');"));
+});
