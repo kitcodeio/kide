@@ -96,7 +96,7 @@ var jsio = (function init() {
         }
 
         if (jsio.__pathCache[modulePath]) {
-            return [jsio.__pathCache[modulePath]];
+            modulePath = jsio.__pathCache[modulePath];
         }
 
         return util.getPossiblePaths(modulePath);
