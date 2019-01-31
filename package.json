@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gulp":"gulp"
+    "gulp": "gulp"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +22,10 @@
     "@angular/router": "~7.1.0",
     "angular-resizable-element": "^3.2.2",
     "bootstrap": "^4.1.3",
+    "cli-progress": "^2.1.1",
+    "clui": "^0.3.6",
     "core-js": "^2.5.4",
+    "dockerode": "^2.5.8",
     "font-awesome": "^4.7.0",
     "hapi": "^16.6.3",
     "inert": "^4.2.1",
@@ -36,6 +39,7 @@
     "shelljs": "^0.8.3",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "tar-fs": "^1.16.3",
     "tslib": "^1.9.0",
     "xterm": "^3.9.1",
     "zone.js": "~0.8.26"
