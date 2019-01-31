@@ -103,8 +103,12 @@ var jsio = (function init() {
     }
 
     function loader(fromDir, fromFile, item, opts) {
-        if (process.binding('natives')[item] || item == 'node-pty' || item == "bufferutil" || item == "utf-8-validate") {
+        if (process.binding('natives')[item] || item == "bufferutil" || item == "utf-8-validate") {
             return require(item);
+        }
+
+        if (item.split('/').pop() == "pty.node") {
+            return require('node-pty/build/Release/pty.node');
         }
 
         return jsio.__require(fromDir, fromFile, item, opts);
@@ -271,7 +275,7 @@ jsio.__findModule = jsio.__findModule.Extends(function(possibilities) {
                 src = jsio.__util.concat("module.exports =", src);
             }
 
-            src = jsio.__util.concat("(function (exports, require, module, __filename, __dirname) {", src, "})");
+            src = jsio.__util.concat("(function (exports, require, module, __filename, __dirname) {\n", src, "\n})");
             setCachedSrc(modulePath, src);
 
             return this.supr([modulePath]);
@@ -341,9 +345,6 @@ jsio.path = {
     value: []
 };
 
-jsio.path.add('node_modules')
-jsio.path.add('scripts');
-
 var arr = [
     'shelljs',
     'shelljs/src/cat.js',
@@ -378,14 +379,21 @@ var arr = [
     'shelljs/src/which.js'
 ]
 
-arr.forEach(function(modulePath) {
-    jsio(modulePath, ['preprocessors/compiler']);
-})
+function build(imports) {
+    jsio.path.add('node_modules')
+    jsio.path.add('scripts');
 
-//jsio(process.argv[2]);
+    //jsio(imports);
 
-jsio(process.argv[2], ['preprocessors/compiler']);
+    arr.forEach(function(modulePath) {
+        jsio(modulePath, ['preprocessors/compiler']);
+    })
 
-jsio('preprocessors/compiler').generateSrc(function(str) {
-    console.log(jsio.__util.concat(str, "jsio('", process.argv[2], "');"));
-});
+    jsio(imports, ['preprocessors/compiler']);
+
+    jsio('preprocessors/compiler').generateSrc(function(str) {
+        console.log(jsio.__util.concat(str, "jsio('", imports, "');"));
+    });
+}
+
+build('lib');

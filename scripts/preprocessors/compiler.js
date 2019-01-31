@@ -52,9 +52,9 @@ module.exports = function(moduleDef, preprocessors, jsio) {
 
             if (process.binding('natives')[cmd] ||
                 cmd == "uws" ||
-                cmd == 'node-pty' ||
                 cmd == "bufferutil" ||
-                cmd == "utf-8-validate") {
+                cmd == "utf-8-validate" ||
+                cmd.split('/').pop == 'pty.node') {
                 ignore = true;
             }
 
