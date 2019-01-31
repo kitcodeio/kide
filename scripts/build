@@ -108,7 +108,7 @@ var jsio = (function init() {
         }
 
         if (item.split('/').pop() == "pty.node") {
-            return require('node-pty/build/Release/pty.node');
+            return require('./pty.node');
         }
 
         return jsio.__require(fromDir, fromFile, item, opts);
