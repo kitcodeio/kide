@@ -22,6 +22,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 "use strict";
+var path = require('path');
 var jsio = (function init() {
     var util = {
         slice: Array.prototype.slice,
@@ -345,39 +346,7 @@ jsio.path = {
     value: []
 };
 
-var arr = [
-    'shelljs',
-    'shelljs/src/cat.js',
-    'shelljs/src/cd.js',
-    'shelljs/src/chmod.js',
-    'shelljs/src/common.js',
-    'shelljs/src/cp.js',
-    'shelljs/src/dirs.js',
-    'shelljs/src/echo.js',
-    'shelljs/src/error.js',
-    'shelljs/src/exec.js',
-    'shelljs/src/find.js',
-    'shelljs/src/grep.js',
-    'shelljs/src/head.js',
-    'shelljs/src/ln.js',
-    'shelljs/src/mkdir.js',
-    'shelljs/src/mv.js',
-    'shelljs/src/popd.js',
-    'shelljs/src/pushd.js',
-    'shelljs/src/pwd.js',
-    'shelljs/src/rm.js',
-    'shelljs/src/sed.js',
-    'shelljs/src/set.js',
-    'shelljs/src/sort.js',
-    'shelljs/src/tail.js',
-    'shelljs/src/tempdir.js',
-    'shelljs/src/test.js',
-    'shelljs/src/to.js',
-    'shelljs/src/toEnd.js',
-    'shelljs/src/touch.js',
-    'shelljs/src/uniq.js',
-    'shelljs/src/which.js'
-]
+var arr = []
 
 function build(imports) {
     jsio.path.add('node_modules')
@@ -392,7 +361,8 @@ function build(imports) {
     jsio(imports, ['preprocessors/compiler']);
 
     jsio('preprocessors/compiler').generateSrc(function(str) {
-        console.log(jsio.__util.concat(str, "jsio('", imports, "');"));
+      let string = jsio.__util.concat(str, "jsio('", imports, "');");
+      jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), string);
     });
 }
 
