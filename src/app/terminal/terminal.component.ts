@@ -69,14 +69,15 @@ export class TerminalComponent implements OnInit {
         self.socket.emit('fetch:modules')
       }, 1000);
       this.socket.on('modules').subscribe((data: any) => {
-        console.log(data);
-        if (data.status !== 'pending' && data.array.length !==0) {
-          clearInterval(interval);
-          if(state !== 'done') {
-            this.xterm.write(data.array.join(' && ') + '\n');
-            state = 'done';
+        if (data.status == 'rcv') {
+          this.socket.emit('done');
+          if (data.array.length !==0){
+            if(state !== 'done') this.xterm.write(data.array.join(' && ') + '\n');
           }
+          clearInterval(interval);
+          state = 'done';
         }
+        if(data.status == 'done') clearInterval(interval);
       });
     }).catch(err => {
       console.error(err);
