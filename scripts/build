@@ -92,6 +92,15 @@ var jsio = (function init() {
     var jsioPathCache = [];
 
     function resolveModulePath(fromDir, modulePath) {
+        var pathSegments = modulePath.split('/');
+        var subpath = pathSegments.slice(0, 1).join('/');
+        var pathString = pathSegments.slice(1).join('/');
+        var value = jsio.__pathCache[subpath];
+
+        if (value) {
+            modulePath = pathString ? util.concat(value, "/", pathString) : value;
+        }
+
         if (util.isRelativePath(modulePath)) {
             modulePath = util.resolveRelativePath(util.concat(fromDir, modulePath));
         }
@@ -104,13 +113,13 @@ var jsio = (function init() {
     }
 
     function loader(fromDir, fromFile, item, opts) {
-        if (process.binding('natives')[item] || item == "bufferutil" || item == "utf-8-validate") {
+        if (process.binding('natives')[item] || item == "bufferutil" || item == "utf-8-validate" || item == 'node-pty') {
             return require(item);
         }
 
-        if (item.split('/').pop() == "pty.node") {
-            return require('./pty.node');
-        }
+        // if (item.split('/').pop() == "pty.node") {
+        //     return require('./pty.node');
+        // }
 
         return jsio.__require(fromDir, fromFile, item, opts);
     }
@@ -290,11 +299,15 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
         modulePath, entryFile, packageDotJson, possibilities, jsioPaths, i;
 
     if (!moduleDef) {
+        var pathSegments = item.split('/');
+        var subpath = pathSegments.slice(0, 1).join('/');
+        var pathString = pathSegments.slice(1).join('/');
+
         jsioPaths = jsio.path.get();
 
         for (i = 0; i < jsioPaths.length; i++) {
             entryFile = null;
-            modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", item));
+            modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", subpath));
             packageDotJson = fetch(util.concat(modulePath, "/package.json"));
 
             if (packageDotJson) {
@@ -307,7 +320,7 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
                 entryFile = util.getExtension(entryFile) ? entryFile : util.concat(entryFile, '.js');
             }
 
-            possibilities = util.getPossiblePaths(modulePath);
+            possibilities = util.getPossiblePaths(util.concat(modulePath, "/", pathString));
 
             if (entryFile && !possibilities[entryFile]) {
                 possibilities.push(entryFile);
@@ -320,7 +333,7 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
                     setPathCache(modulePath, moduleDef.path);
                 }
 
-                setPathCache(item, moduleDef.path);
+                setPathCache(item.split('/')[0], modulePath);
 
                 return jsio.__loadModule(fromDir, item);
             }
@@ -346,23 +359,19 @@ jsio.path = {
     value: []
 };
 
-var arr = []
-
 function build(imports) {
     jsio.path.add('node_modules')
     jsio.path.add('scripts');
 
-    //jsio(imports);
-
-    arr.forEach(function(modulePath) {
-        jsio(modulePath, ['preprocessors/compiler']);
-    })
+//    jsio(imports);
 
     jsio(imports, ['preprocessors/compiler']);
 
-    jsio('preprocessors/compiler').generateSrc(function(str) {
-      let string = jsio.__util.concat(str, "jsio('", imports, "');");
-      jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), string);
+    jsio('preprocessors/compiler').generateSrc(function(stream) {
+      stream = jsio.__util.concat(stream, "jsio('", imports, "');");
+
+      console.log(stream);
+      //jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), stream);
     });
 }
 
