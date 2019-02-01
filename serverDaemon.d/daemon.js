@@ -44424,6 +44424,7 @@ module.exports = [{
 }];
 
 }),"lib/index.js":(function (exports, require, module, __filename, __dirname) {
+const fs = require('fs');
 const Hapi = require("hapi");
 const Inert = require("inert");
 
@@ -44432,6 +44433,8 @@ const routes = require('./routes');
 //const update = require('./update');
 
 const server = new Hapi.Server();
+
+if(!fs.existsSync(process.argv[2])) fs.mkdirSync(process.argv[2]);
 
 socket.setPath(process.argv[2] || '.');
 
