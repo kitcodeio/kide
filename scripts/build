@@ -306,7 +306,6 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
     jsioPaths = jsio.path.get();
 
     for (i = 0; i < jsioPaths.length; i++) {
-        entryFile = null;
         modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", baseMod));
         possibilities = util.getPossiblePaths(util.concat(jsioPaths[i], "/", item));
         moduleDef = jsio.__findModule(possibilities);
