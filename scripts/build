@@ -299,44 +299,44 @@ jsio.__loadModule = jsio.__loadModule.Extends(function(fromDir, item) {
         util = jsio.__util,
         modulePath, entryFile, packageDotJson, possibilities, jsioPaths, i;
 
-    if (!moduleDef) {
-        jsioPaths = jsio.path.get();
-
-        for (i = 0; i < jsioPaths.length; i++) {
-            entryFile = null;
-            modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", baseMod));
-            possibilities = util.getPossiblePaths(util.concat(jsioPaths[i], "/", item));
-            moduleDef = jsio.__findModule(possibilities);
-
-            if (moduleDef) {
-                setPathCache(baseMod, modulePath);
-
-                return jsio.__loadModule(fromDir, item);
-            }
-
-            packageDotJson = fetch(util.concat(jsioPaths[i], "/", item, "/package.json"));
-
-            if (packageDotJson) {
-                entryFile = JSON.parse(packageDotJson).main;
-            }
-
-            if (entryFile) {
-                entryFile = util.concat(jsioPaths[i], "/", item, "/", entryFile);
-                entryFile = util.resolveRelativePath(entryFile);
-                entryFile = util.getPossiblePaths(entryFile);
-                moduleDef = jsio.__findModule(entryFile);
-            }
-
-            if (moduleDef) {
-                setPathCache(modulePath, moduleDef.path);
-                setPathCache(baseMod, modulePath);
-
-                return jsio.__loadModule(fromDir, item);
-            }
-        }
+    if (moduleDef) {
+        return moduleDef;
     }
 
-    return moduleDef;
+    jsioPaths = jsio.path.get();
+
+    for (i = 0; i < jsioPaths.length; i++) {
+        entryFile = null;
+        modulePath = util.resolveRelativePath(util.concat(jsioPaths[i], "/", baseMod));
+        possibilities = util.getPossiblePaths(util.concat(jsioPaths[i], "/", item));
+        moduleDef = jsio.__findModule(possibilities);
+
+        if (moduleDef) {
+            setPathCache(baseMod, modulePath);
+
+            return jsio.__loadModule(fromDir, item);
+        }
+
+        packageDotJson = fetch(util.concat(jsioPaths[i], "/", item, "/package.json"));
+
+        if (packageDotJson) {
+            entryFile = JSON.parse(packageDotJson).main;
+        }
+
+        if (entryFile) {
+            entryFile = util.concat(jsioPaths[i], "/", item, "/", entryFile);
+            entryFile = util.resolveRelativePath(entryFile);
+            entryFile = util.getPossiblePaths(entryFile);
+            moduleDef = jsio.__findModule(entryFile);
+        }
+
+        if (moduleDef) {
+            setPathCache(modulePath, moduleDef.path);
+            setPathCache(baseMod, modulePath);
+
+            return jsio.__loadModule(fromDir, item);
+        }
+    }
 });
 
 jsio.__require = jsio.__require.Extends(function(fromDir, fromFile, item, preprocessors) {
