@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Terminal } from 'xterm';
-import  { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 
 import { XtermService } from '../services/xterm/xterm.service';
 import { ViewService } from '../services/view/view.service';
 import { UrlService } from '../services/url/url.service';
+import { SocketService } from '../services/socket/socket.service';
 
 declare var $:any;
 
@@ -20,7 +21,7 @@ export class TerminalComponent implements OnInit {
   termRowHeight;
   termColWidth;
 	
-  constructor(private xterm: XtermService, private view: ViewService, private http: HttpClient, private url: UrlService) { }
+  constructor(private xterm: XtermService, private view: ViewService, private http: HttpClient, private url: UrlService, private socket: SocketService) { }
 
   setDimentions(h, w): void {
     $("#terminal").css("height", h);
@@ -48,6 +49,7 @@ export class TerminalComponent implements OnInit {
   ngAfterViewInit() {
     let self = this;
     let size = this.calculateSize();
+    let interval, state;
     this.xterm.init(size).then(()=>{
       this.term = new Terminal({
         cols: size.cols,
@@ -63,8 +65,19 @@ export class TerminalComponent implements OnInit {
       this.xterm.on().subscribe(data => {
         this.term.write(data);
       });
-      this.http.get(this.url.server + 'setup').subscribe((res: any) => {
-        if (!res.status) this.xterm.write(res.modules.join(' && ') + '\n');
+      interval = setInterval(() => {
+        self.socket.emit('fetch:modules')
+      }, 1000);
+      this.socket.on('modules').subscribe((data: any) => {
+        if (data.status == 'rcv') {
+          this.socket.emit('done');
+          if (data.array.length !==0){
+            if(state !== 'done') this.xterm.write(data.array.join(' && ') + '\n');
+          }
+          clearInterval(interval);
+          state = 'done';
+        }
+        if(data.status == 'done') clearInterval(interval);
       });
     }).catch(err => {
       console.error(err);
