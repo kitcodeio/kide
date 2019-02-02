@@ -121,7 +121,7 @@ var jsio = (function init() {
     }
 
     function loader(fromDir, fromFile, item, opts) {
-        if (process.binding('natives')[item] || item == "bufferutil" || item == "utf-8-validate") {
+        if (process.binding('natives')[item] || item == "bufferutil" || item == "utf-8-validate" || item == 'uglify-es') {
             return require(item);
         }
 
@@ -133,6 +133,9 @@ var jsio = (function init() {
     }
 
     function _require(fromDir, fromFile, item) {
+        if(item == '../lib/ast.js'){
+          console.log("check this out");
+        }
         var moduleDef = jsio.__loadModule(fromDir, item);
 
         if (!moduleDef) {
@@ -366,9 +369,8 @@ function build(imports) {
     jsio(imports, ['preprocessors/compiler']);
     jsio('preprocessors/compiler').generateSrc(function(stream) {
         stream = jsio.__util.concat(stream, "jsio('", imports, "');");
-        //console.log(stream);
-        //var uglify = jsio('uglify-js');
-        //stream = uglify.minify(stream);
+        stream = jsio('uglify-es').minify(stream).code;
+
         jsio('fs').writeFileSync(jsio('path').join(__dirname, '../serverDaemon.d/daemon.js'), stream);
     });
 }

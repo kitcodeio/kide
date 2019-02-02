@@ -61,9 +61,6 @@ gulp.task('build', async function() {
   await run('./scripts/build');
   await run('mkdir serverDaemon.d/node_modules && mkdir serverDaemon.d/node_modules/socket.io-client && mkdir serverDaemon.d/node_modules/socket.io-client/dist');
   await run('cp -r node_modules/socket.io-client/dist/socket.io.js* serverDaemon.d/node_modules/socket.io-client/dist/');
-  gulp.src(['serverDaemon.d/daemon.js'])
-    .pipe(minify())
-    .pipe(gulp.dest('serverDaemon.d/'))
 });
 
 gulp.task('test', async function() {
