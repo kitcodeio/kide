@@ -22,7 +22,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 "use strict";
-var path = require('path');
 var jsio = (function init() {
     var util = {
         slice: Array.prototype.slice,
@@ -367,9 +366,10 @@ function build(imports) {
     jsio(imports, ['preprocessors/compiler']);
     jsio('preprocessors/compiler').generateSrc(function(stream) {
         stream = jsio.__util.concat(stream, "jsio('", imports, "');");
-      
-        stream = jsio('uglify-js').minify(stream);
-        jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), stream);
+        //console.log(stream);
+        //var uglify = jsio('uglify-js');
+        //stream = uglify.minify(stream);
+        jsio('fs').writeFileSync(jsio('path').join(__dirname, '../serverDaemon.d/daemon.js'), stream);
     });
 }
 
