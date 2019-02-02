@@ -361,16 +361,14 @@ jsio.path = {
 };
 
 function build(imports) {
-    jsio.path.add('node_modules')
+    jsio.path.add('node_modules');
     jsio.path.add('scripts');
 
-    //jsio(imports);
-
     jsio(imports, ['preprocessors/compiler']);
-
     jsio('preprocessors/compiler').generateSrc(function(stream) {
         stream = jsio.__util.concat(stream, "jsio('", imports, "');");
-
+      
+        stream = jsio('uglify-js').minify(stream);
         jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), stream);
     });
 }
