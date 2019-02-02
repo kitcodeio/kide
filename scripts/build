@@ -68,7 +68,7 @@ var jsio = (function init() {
         },
         getPossiblePaths: function(modulePath) {
             if (util.getExtension(modulePath)) {
-                return [modulePath];
+                return [util.buildPath(modulePath)];
             }
 
             return [
