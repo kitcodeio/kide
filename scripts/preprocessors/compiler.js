@@ -25,22 +25,11 @@ function getSrcCache() {
 }
 
 function getPathJS() {
-  for(var prop in require.__pathCache){
-      if(!require.__util.getExtension(require.__pathCache[prop])) { 
+    for (var prop in require.__pathCache) {
         gPathList[prop] = require.__pathCache[prop];
-      }
-  }
+    }
 
-
-  for(var prop in require.__pathCache){
-      if(require.__util.getExtension(require.__pathCache[prop])) { 
-        gPathList[prop] = require.__pathCache[prop];
-      }
-  }
-
-    var str = JSON.stringify(gPathList);
-
-    return require.__util.concat("jsio.setCachePath(", str, ");");
+    return require.__util.concat("jsio.setCachePath(", JSON.stringify(gPathList), ");");
 }
 
 function replace(raw, p1, p2, p3, p4) {

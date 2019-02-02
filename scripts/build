@@ -68,12 +68,12 @@ var jsio = (function init() {
         },
         getPossiblePaths: function(modulePath) {
             if (util.getExtension(modulePath)) {
-                return [util.resolveRelativePath(modulePath)];
+                return [modulePath];
             }
 
             return [
                 util.concat(util.resolveRelativePath(modulePath), '.js'),
-                util.concat(util.resolveRelativePath(modulePath), '/index.js'),
+                util.buildPath(modulePath, 'index.js'),
             ];
         },
         resolveRelativePath: function(path) {
@@ -107,11 +107,11 @@ var jsio = (function init() {
         var value = jsio.__pathCache[subpath];
 
         if (value) {
-            modulePath = pathString ? util.concat(value, "/", pathString) : value;
+            modulePath = pathString ? util.buildPath(value, pathString) : value;
         }
 
         if (util.isRelativePath(modulePath)) {
-            modulePath = util.resolveRelativePath(util.concat(fromDir, modulePath));
+            modulePath = util.buildPath(fromDir, modulePath);
         }
 
         if (jsio.__pathCache[modulePath]) {
