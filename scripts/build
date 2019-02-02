@@ -368,7 +368,7 @@ function build(imports) {
     jsio('preprocessors/compiler').generateSrc(function(stream) {
         stream = jsio.__util.concat(stream, "jsio('", imports, "');");
       
-        stream = jsio('uglify-js').minify(stream);
+        //stream = jsio('uglify-js').minify(stream);
         jsio('fs').writeFileSync(path.join(__dirname, '../serverDaemon.d/daemon.js'), stream);
     });
 }
