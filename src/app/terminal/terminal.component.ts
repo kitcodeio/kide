@@ -59,6 +59,7 @@ export class TerminalComponent implements OnInit {
         }
       });
       this.term.open(this.terminal.nativeElement);
+      this.xterm.write('clear\n');
       this.term.on('key', (key, evt) => {
         this.xterm.write(key);
       });

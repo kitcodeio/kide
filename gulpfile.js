@@ -4,6 +4,9 @@ const Docker = require('dockerode');
 const progress = require('cli-progress');
 const CLI = require('clui');
 const tar = require('tar-fs');
+const path = require('path');
+
+const config = require('./config/config.json');
 
 const docker = new Docker();
 const Spinner = CLI.Spinner;
@@ -37,10 +40,10 @@ function pull() {
 function install() {
   return new Promise(async done => {
     let stream = await docker.buildImage({
-      context: __dirname,
+      context: path.join(__dirname, 'dockerfiles'),
       src: ['Dockerfile']
     }, {
-      t: 'ubuntu-nginx'
+      t: config.docker.baseImageName
     });
     const countdown = new Spinner('starting', ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']);
     countdown.start();
