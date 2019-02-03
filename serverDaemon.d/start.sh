@@ -1,1 +1,1 @@
-cd /serverDaemon.d && ./node daemon-min.js /root/project
+cd /serverDaemon.d && ./node daemon.js /root/project

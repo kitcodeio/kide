@@ -1,6 +1,5 @@
 const gulp = require('gulp');
 const exec = require('child_process').exec;
-const minify = require('gulp-minify');
 const Docker = require('dockerode');
 const progress = require('cli-progress');
 const CLI = require('clui');
