@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "clean:test": "npm run gulp build && npm run gulp test"
   },
   "private": true,
   "dependencies": {
