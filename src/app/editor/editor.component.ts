@@ -62,9 +62,9 @@ export class EditorComponent implements OnInit {
     this.fs.init().then(data => {
       this.dir = data.dirList;
       this.activeDir = data.dirPath;
-      if (this.dir.length == 0) return this.createNewFile();
+      if (this.dir.length == 0) return; // this.createNewFile();
       for(let i = 0; i < this.dir.length; i++){
-	let el = this.dir[i];
+    	let el = this.dir[i];
         let extension = el.name.slice(el.name.lastIndexOf('.') + 1);
         if(el.type == 'file' && el.name.indexOf('.') !== 0 && extension !== 'md' && extension !== 'pem') return this.fs.readFile(el.uri).then(content => {
           this.open({
@@ -99,7 +99,7 @@ export class EditorComponent implements OnInit {
     $(document).on('keydown', function(event) {
       if (event.keyCode == 83 && event.ctrlKey) {
         event.preventDefault();
-	self.toastr.success('file saved', 'Success', { positionClass:'toast-bottom-right' });
+	      self.toastr.success('file saved', 'Success', { positionClass:'toast-bottom-right' });
       }
     }); 
   }

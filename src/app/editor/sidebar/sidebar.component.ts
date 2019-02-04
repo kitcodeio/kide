@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
     this.http.get(this.url.server + 'settings').subscribe((data: any) => {
       if (!data.error) {
         this.$PORT = data.port;
-	this.remeberPort = data.remeberPort;
+      	this.remeberPort = data.remeberPort;
         this.new_port = this.$PORT;
       }
     });
