@@ -61,6 +61,7 @@ export class EditorComponent implements OnInit {
   onReady(editor?: monaco.editor.IEditor) {
     this.fs.init().then(data => {
       this.dir = data.dirList;
+      console.log(this.dir);
       this.activeDir = data.dirPath;
       if (this.dir.length == 0) return; // this.createNewFile();
       for(let i = 0; i < this.dir.length; i++){

@@ -13,7 +13,7 @@
         aria-hidden="true"></i> {{el.name || 'undefined' }}
     </div>
     <div class="child-ul" *ngIf="el.type == 'dir' && el.state=='open'">
-      <app-tree [dir]="el.dir" [open]="open.bind(this)"></app-tree>
+      <app-tree *ngIf="el.dir.length" [dir]="el.dir" [open]="open.bind(this)"></app-tree>
     </div>
   </div>
 </div>

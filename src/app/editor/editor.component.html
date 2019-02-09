@@ -2,7 +2,7 @@
   <app-sidebar></app-sidebar>
   <section class="content" id="content">
   <app-tree
-    *ngIf="view.showTree"
+    *ngIf="view.showTree && dir.length"
     [dir]="dir"
     [open]="open.bind(this)"
     [reload]="onReady.bind(this)"
