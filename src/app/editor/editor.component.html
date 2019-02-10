@@ -2,8 +2,9 @@
   <app-sidebar></app-sidebar>
   <section class="content" id="content">
   <app-tree
-    *ngIf="view.showTree && dir.length"
+    *ngIf="view.showTree"
     [dir]="dir"
+    [dirName]="dirName"
     [open]="open.bind(this)"
     [reload]="onReady.bind(this)"
     [isRoot]="true"

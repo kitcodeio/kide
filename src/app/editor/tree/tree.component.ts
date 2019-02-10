@@ -12,7 +12,7 @@ declare var $:any;
 })
 export class TreeComponent implements OnInit {
 
-  dirName: any;
+  @Input() dirName: any;
   @Input() isRoot: boolean;
   @Input() dir: any[];
   @Input() open: Function;
@@ -53,16 +53,15 @@ export class TreeComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.dir.length) this.dirName = this.dir[0].uri.substring(0, this.dir[0].uri.lastIndexOf('/'));
     this.socket.on('activity').subscribe(obj => {
+      this.dirName = this.dirName || (this.dir.length?this.dir[0].uri.substring(0, this.dir[0].uri.lastIndexOf('/')):null);
       if(obj.file.substring(0, obj.file.lastIndexOf('/')) == this.dirName) {
-        console.log(obj);
         switch(obj.event){
           case 'unlink':
-            this.dir = this.dir.filter(el => (obj.file !== el.uri && el.type == 'file'));
+            this.dir = this.dir.filter(el => (el.type == 'dir' ?true:el.uri!==obj.file));
             break;
           case 'unlinkDir':
-            this.dir = this.dir.filter(el => (obj.file !== el.uri && el.type == 'dir'));
+            this.dir = this.dir.filter(el => (el.type == 'file'?true:el.uri!==obj.file));
             break;
           case 'add':
             this.dir.push({
@@ -72,7 +71,7 @@ export class TreeComponent implements OnInit {
             });
             break;
           case 'addDir':
-            this.dir.push({
+            this.dir.unshift({
               type: 'dir',
               uri: obj.file,
               name: obj.file.substring(obj.file.lastIndexOf('/') + 1)

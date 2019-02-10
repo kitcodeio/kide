@@ -40,6 +40,8 @@ export class EditorComponent implements OnInit {
 
   dir: any[] = [];
 
+  dirName;
+
   file;
 
   treeWidth: number = 200;
@@ -61,7 +63,7 @@ export class EditorComponent implements OnInit {
   onReady(editor?: monaco.editor.IEditor) {
     this.fs.init().then(data => {
       this.dir = data.dirList;
-      console.log(this.dir);
+      this.dirName = this.dir.length?this.dir[0].uri.substring(0, this.dir[0].uri.lastIndexOf('/')):null;
       this.activeDir = data.dirPath;
       if (this.dir.length == 0) return; // this.createNewFile();
       for(let i = 0; i < this.dir.length; i++){
