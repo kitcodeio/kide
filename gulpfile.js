@@ -5,7 +5,6 @@ const progress = require('cli-progress');
 const CLI = require('clui');
 const tar = require('tar-fs');
 const path = require('path');
-
 const config = require('./config/config.json');
 
 const docker = new Docker();
@@ -64,31 +63,30 @@ gulp.task('build', async function() {
   await run('cp -r node_modules/socket.io-client/dist/socket.io.js* serverDaemon.d/node_modules/socket.io-client/dist/');
 });
 
-gulp.task('test', async function() {
+gulp.task('start-kide', async function(done) {
   let image = await docker.getImage('ubuntu').inspect().catch(() => {});
   if (!image) await pull();
   let nginx = await docker.getImage('ubuntu-nginx').inspect().catch(() => {});
   if (!nginx) await install();
   let container = await docker.createContainer({
     Image: 'ubuntu-nginx',
-    Cmd: ['/bin/bash', '/start.sh']
+    Cmd: ['/bin/bash', 'serverDaemon.d/kide']
   });
+
   console.log('packing kide');
   let pack = tar.pack('.', {
     entries: ['serverDaemon.d']
   });
+
   console.log('copying kide');
   await container.putArchive(pack, {
     path: '/'
   });
-  pack = tar.pack('serverDaemon.d', {
-    entries: ['start.sh']
-  });
-  console.log('copying start.sh');
-  await container.putArchive(pack, {
-    path: '/'
-  });
+
   await container.start();
   let info = await container.inspect();
+
   console.log('open this link http://' + info.NetworkSettings.IPAddress + ':54123/'); 
+  return done();
 });
+
