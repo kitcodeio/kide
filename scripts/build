@@ -129,10 +129,6 @@ var jsio = (function init() {
             return require("node-pty/build/Release/pty.node");
         }
 
-        if(item.split('/').pop() == 'fse.node'){
-            return require(item);
-        }
-
         return jsio.__require(fromDir, fromFile, item, opts);
     }
 
