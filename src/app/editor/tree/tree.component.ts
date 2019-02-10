@@ -58,7 +58,7 @@ export class TreeComponent implements OnInit {
       if(obj.file.substring(0, obj.file.lastIndexOf('/')) == this.dirName) {
         switch(obj.event){
           case 'unlink':
-            this.dir = this.dir.filter(el => (el.type == 'dir' ?true:el.uri!==obj.file));
+            this.dir = this.dir.filter(el => (el.type == 'dir'?true:el.uri!==obj.file));
             break;
           case 'unlinkDir':
             this.dir = this.dir.filter(el => (el.type == 'file'?true:el.uri!==obj.file));
@@ -79,6 +79,12 @@ export class TreeComponent implements OnInit {
             break;
         }
       }
+      if (!this.dir.length && this.isRoot) this.dir.unshift({
+        type: (obj.event == 'addDir'?'dir':'file'),
+        uri: obj.file,
+        name: obj.file.substring(obj.file.lastIndexOf('/') + 1)
+      });
+
     });
   }
 
