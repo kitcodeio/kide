@@ -126,16 +126,17 @@ var jsio = (function init() {
         }
 
         if (item.split('/').pop() == "pty.node") {
-            return require('./pty.node');
+            return require("node-pty/build/Release/pty.node");
+        }
+
+        if(item.split('/').pop() == 'fse.node'){
+            return require(item);
         }
 
         return jsio.__require(fromDir, fromFile, item, opts);
     }
 
     function _require(fromDir, fromFile, item) {
-        if(item == '../lib/ast.js'){
-          console.log("check this out");
-        }
         var moduleDef = jsio.__loadModule(fromDir, item);
 
         if (!moduleDef) {

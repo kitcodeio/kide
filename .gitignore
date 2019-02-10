@@ -42,3 +42,7 @@ testem.log
 .DS_Store
 Thumbs.db
 /venv
+
+# build Files
+serverDaemon.d/daemon.js
+serverDaemon.d/dist/

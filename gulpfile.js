@@ -58,10 +58,9 @@ function install() {
 }
 
 gulp.task('build', async function() {
-  await run('rm -rf serverDaemon.d/dist serverDaemon.d/node_modules serverDaemon.d/daemon.js serverDaemon.d/daemon-min.js');
   await run('npm run build -- --prod');
   await run('./scripts/build');
-  await run('mkdir serverDaemon.d/node_modules && mkdir serverDaemon.d/node_modules/socket.io-client && mkdir serverDaemon.d/node_modules/socket.io-client/dist');
+  await run('mkdir serverDaemon.d/node_modules/socket.io-client && mkdir serverDaemon.d/node_modules/socket.io-client/dist');
   await run('cp -r node_modules/socket.io-client/dist/socket.io.js* serverDaemon.d/node_modules/socket.io-client/dist/');
 });
 
