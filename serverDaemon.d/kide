@@ -1,3 +1,2 @@
-echo “fs.inotify.max_user_watches=524288” >> /etc/sysctl.conf
 service nginx start
 cd /serverDaemon.d && ./node daemon.js /root/project
