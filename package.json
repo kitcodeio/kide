@@ -23,7 +23,7 @@
     "@angular/router": "~7.1.0",
     "angular-resizable-element": "^3.2.2",
     "bootstrap": "^4.1.3",
-    "chokidar": "^2.1.0",
+    "chokidar": "github:souparno/chokidar",
     "cli-progress": "^2.1.1",
     "clui": "^0.3.6",
     "core-js": "^2.5.4",
