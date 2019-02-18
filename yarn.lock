@@ -1621,10 +1621,9 @@ chokidar@^1.4.2:
   optionalDependencies:
     fsevents "^1.0.0"
 
-chokidar@^2.1.0:
+"chokidar@github:souparno/chokidar":
   version "2.1.0"
-  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.0.tgz#5fcb70d0b28ebe0867eb0f09d5f6a08f29a1efa0"
-  integrity sha512-5t6G2SH8eO6lCvYOoUpaRnF5Qfd//gd7qJAkwRUw9qlGVkiQ13uwQngqbWWaurOsaAm9+kUGbITADxt6H0XFNQ==
+  resolved "https://codeload.github.com/souparno/chokidar/tar.gz/0c3a97f8136d08eed6c2bfebd555988400212fc2"
   dependencies:
     anymatch "^2.0.0"
     async-each "^1.0.1"
