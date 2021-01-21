@@ -41,7 +41,7 @@
     "process-nextick-args": "^2.0.0",
     "rxjs": "~6.3.3",
     "shelljs": "^0.8.3",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "socket.io-client": "^2.2.0",
     "tar-fs": "^1.16.3",
     "tslib": "^1.9.0",
