@@ -40,7 +40,7 @@
     "popper.js": "^1.14.6",
     "process-nextick-args": "^2.0.0",
     "rxjs": "~6.3.3",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "tar-fs": "^1.16.3",
